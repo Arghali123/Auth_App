@@ -1,4 +1,4 @@
-package com.example.auth_app_backend.services;
+package com.example.auth_app_backend.services.impl;
 
 import com.example.auth_app_backend.auth.entities.Provider;
 import com.example.auth_app_backend.auth.entities.Users;
@@ -6,6 +6,7 @@ import com.example.auth_app_backend.dtos.UserDTO;
 import com.example.auth_app_backend.exceptions.ResourceNotFoundException;
 import com.example.auth_app_backend.helpers.UserHelper;
 import com.example.auth_app_backend.repositories.UserRepository;
+import com.example.auth_app_backend.services.UserService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -16,7 +17,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
 
