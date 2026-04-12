@@ -1,6 +1,6 @@
 package com.example.auth_app_backend.controllers;
 
-import com.example.auth_app_backend.dtos.UserDTO;
+import com.example.auth_app_backend.auth.payload.UserDTO;
 import com.example.auth_app_backend.services.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;

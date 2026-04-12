@@ -1,4 +1,4 @@
-package com.example.auth_app_backend.dtos;
+package com.example.auth_app_backend.auth.payload;
 
 import lombok.*;
 

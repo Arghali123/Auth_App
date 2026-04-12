@@ -1,6 +1,6 @@
 package com.example.auth_app_backend.services.impl;
 
-import com.example.auth_app_backend.dtos.UserDTO;
+import com.example.auth_app_backend.auth.payload.UserDTO;
 import com.example.auth_app_backend.services.AuthService;
 import com.example.auth_app_backend.services.UserService;
 import lombok.AllArgsConstructor;

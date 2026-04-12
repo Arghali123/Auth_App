@@ -2,7 +2,7 @@ package com.example.auth_app_backend.services.impl;
 
 import com.example.auth_app_backend.auth.entities.Provider;
 import com.example.auth_app_backend.auth.entities.Users;
-import com.example.auth_app_backend.dtos.UserDTO;
+import com.example.auth_app_backend.auth.payload.UserDTO;
 import com.example.auth_app_backend.exceptions.ResourceNotFoundException;
 import com.example.auth_app_backend.helpers.UserHelper;
 import com.example.auth_app_backend.repositories.UserRepository;

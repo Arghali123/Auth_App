@@ -1,7 +1,6 @@
-package com.example.auth_app_backend.dtos;
+package com.example.auth_app_backend.auth.payload;
 
 import com.example.auth_app_backend.auth.entities.Provider;
-import com.example.auth_app_backend.auth.entities.Role;
 import lombok.*;
 
 import java.time.Instant;
@@ -21,10 +20,9 @@ public class UserDTO {
     private String name;
     private String password;
     private String image;
-    private boolean enable=true;
-    private Instant createdAt= Instant.now();
-    private Instant updatedAt=Instant.now();
-
-    private Provider provider=Provider.LOCAL;
-    private Set<RoleDto> roles=new HashSet<>();
+    private boolean enable = true;
+    private Instant createdAt = Instant.now();
+    private Instant updatedAt = Instant.now();
+    private Provider provider = Provider.LOCAL;
+    private Set<RoleDto> roles = new HashSet<>();
 }
