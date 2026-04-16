@@ -11,6 +11,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -31,6 +32,9 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
     private final JwtService jwtService;
     private final CookieService cookieService;
     private final RefreshTokenRepository refreshTokenRepository;
+
+    @Value("${app.auth.frontend.success-redirect}")
+    private String frontEndSuccessUrl;
 
     //use this url to go to google login page
     /*
@@ -72,6 +76,28 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
                         .build();
                 user=userRepository.findByEmail(email).orElseGet(()->userRepository.save(newUser));
             }
+            case "github"->
+            {
+                String name=oAuth2User.getAttributes().getOrDefault("login","").toString();
+                String githubId=oAuth2User.getAttributes().getOrDefault("id","").toString();
+                String image=oAuth2User.getAttributes().getOrDefault("avatar_url","").toString();
+
+                String email=(String)oAuth2User.getAttributes().get("email");
+                if(email == null)
+                {
+                    email =name+"@github.com";
+                }
+
+                Users newUser=Users.builder()
+                        .email(email)
+                        .name(name)
+                        .image(image)
+                        .enable(true)
+                        .provider(Provider.GITHUB)
+                        .providerId(githubId)
+                        .build();
+                user=userRepository.findByEmail(email).orElseGet(()->userRepository.save(newUser));
+            }
 
             default -> {
                 throw new RuntimeException("Invalid registration id");
@@ -92,7 +118,8 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         String refreshToken=jwtService.generateRefreshToken(user,refreshTokenOb.getJti());
 
         cookieService.attachRefreshCookie(response,refreshToken,(int)jwtService.getRefreshTtlSeconds());
-        response.getWriter().write("Login SucessFull");
+        //response.getWriter().write("Login SucessFull");
+        response.sendRedirect(frontEndSuccessUrl);
 
 
     }
