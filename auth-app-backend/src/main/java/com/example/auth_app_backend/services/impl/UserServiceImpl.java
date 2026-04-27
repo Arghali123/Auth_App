@@ -1,10 +1,13 @@
 package com.example.auth_app_backend.services.impl;
 
 import com.example.auth_app_backend.auth.entities.Provider;
+import com.example.auth_app_backend.auth.entities.Role;
 import com.example.auth_app_backend.auth.entities.Users;
 import com.example.auth_app_backend.auth.payload.UserDTO;
+import com.example.auth_app_backend.config.AppConstants;
 import com.example.auth_app_backend.exceptions.ResourceNotFoundException;
 import com.example.auth_app_backend.helpers.UserHelper;
+import com.example.auth_app_backend.repositories.RoleRepository;
 import com.example.auth_app_backend.repositories.UserRepository;
 import com.example.auth_app_backend.services.UserService;
 import jakarta.transaction.Transactional;
@@ -13,6 +16,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.UUID;
 
 @Service
@@ -20,6 +24,7 @@ import java.util.UUID;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
+    private final RoleRepository roleRepository;
 
     @Override
     @Transactional
@@ -36,10 +41,15 @@ public class UserServiceImpl implements UserService {
 
         //if you have extra check __put here__
 
-        Users user=modelMapper.map(userDTO,Users.class);
-        user.setProvider(userDTO.getProvider()!=null ? userDTO.getProvider(): Provider.LOCAL);
-        //role assign here to user__ for authorization.
-        //TODO
+        Users user = modelMapper.map(userDTO, Users.class);
+        user.setEnable(true);
+        user.setProvider(userDTO.getProvider() != null ? userDTO.getProvider() : Provider.LOCAL);
+        user.setRoles(new HashSet<>());  // add this line
+
+        Role role = roleRepository.findByName("ROLE_" + AppConstants.GUEST_ROLE).orElse(null);
+        user.getRoles().add(role);
+
+
         Users savedUser=userRepository.save(user);
         return modelMapper.map(savedUser,UserDTO.class);
     }
@@ -63,7 +73,7 @@ public class UserServiceImpl implements UserService {
 
         //TODO:change password updation logic
         if(userDTO.getPassword()!=null) existingUser.setPassword(userDTO.getPassword());
-        existingUser.setEnable(userDTO.isEnable());
+        existingUser.setEnable(userDTO.getEnable() != null ? userDTO.getEnable() : true);
         existingUser.setUpdatedAt(Instant.now());
         Users updatedUser=userRepository.save(existingUser);
         return modelMapper.map(updatedUser,UserDTO.class);

@@ -1,10 +1,12 @@
 package com.example.auth_app_backend.controllers;
 
 import com.example.auth_app_backend.auth.payload.UserDTO;
+import com.example.auth_app_backend.config.AppConstants;
 import com.example.auth_app_backend.services.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -49,6 +51,7 @@ public class UserController {
     }
 
     //get user by id
+    @PreAuthorize("hasRole('"+ AppConstants.ADMIN_ROLE +"')")
     @GetMapping("/{userId}")
     public ResponseEntity<UserDTO> getUserById(@PathVariable("userId") String userId)
     {

@@ -60,6 +60,8 @@ security:
 
 
 app:
+  cors:
+    front-end-url: ${FRONT_END_URL:http://localhost:5173}
   auth:
     frontend:
       success-redirect: http://localhost:5173/oauth/success

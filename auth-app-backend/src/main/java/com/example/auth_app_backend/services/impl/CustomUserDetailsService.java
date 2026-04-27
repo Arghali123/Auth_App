@@ -1,6 +1,5 @@
 package com.example.auth_app_backend.services.impl;
 
-import com.example.auth_app_backend.exceptions.ResourceNotFoundException;
 import com.example.auth_app_backend.repositories.UserRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -16,6 +15,6 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByEmail(username).orElseThrow(()->new ResourceNotFoundException("Invalid email and password!!"));
+        return userRepository.findByEmail(username).orElseThrow(()->new UsernameNotFoundException("Invalid email and password!!"));
     }
 }

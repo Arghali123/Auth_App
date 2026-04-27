@@ -16,6 +16,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,6 +45,8 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final RefreshTokenRepository refreshTokenRepository;
     private final CookieService cookieService;
+    private final Logger logger= LoggerFactory.getLogger(this.getClass());
+
 
     @PostMapping("/login")
     public ResponseEntity<TokenResponse> login(@RequestBody LoginRequest loginRequest, HttpServletResponse response)
@@ -77,6 +81,7 @@ public class AuthController {
         cookieService.addNoStoreHeaders(response);
 
         TokenResponse tokenResponse=TokenResponse.of(accessToken,refreshToken,jwtService.getAccessTtlSeconds(),mapper.map(user,UserDTO.class));
+                logger.info("Successful authentication" +tokenResponse);
         return ResponseEntity.ok(tokenResponse);
     }
 
@@ -85,7 +90,7 @@ public class AuthController {
             return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.email(), loginRequest.password()));
         }catch (Exception e)
         {
-            throw new BadCredentialsException("Invalid User or Password");
+            throw new BadCredentialsException(e.getMessage());
         }
     }
 
